@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Desktop.Action;
 import java.awt.event.*;
 
 public class ButtonController extends Frame implements ActionListener  {
@@ -33,23 +34,31 @@ public class ButtonController extends Frame implements ActionListener  {
 	}
 	private void startMenue(ActionEvent e) {
 		JFrame[] windows = calc.getwindowArray();
-		final int currentWindow = 0;
+		
 		final int heatTransfer = 1;
 		final int massTransfer = 2;
 		if(e.getActionCommand().equals("Heat Transfer")) {
-			windows[heatTransfer].setLocation(windows[currentWindow].getLocation());
+			windows[heatTransfer].setLocation(windows[calc.getCurrentWindow()].getLocation());
 			windows[heatTransfer].setVisible(true);
-			calc.setCurrentWindwo(1);
-			windows[currentWindow].setVisible(false);
+			windows[calc.getCurrentWindow()].setVisible(false);
+			calc.setCurrentWindwo(heatTransfer);
 		}else {
-			windows[massTransfer].setLocation(windows[currentWindow].getLocation());
+			windows[massTransfer].setLocation(windows[calc.getCurrentWindow()].getLocation());
 			windows[massTransfer].setVisible(true);
-			calc.setCurrentWindwo(2);
-			windows[currentWindow].setVisible(false);
+			windows[calc.getCurrentWindow()].setVisible(false);
+			calc.setCurrentWindwo(massTransfer);
 		}
 		
-	}private void heatTransfer(ActionEvent e) {
+	}
+	private void heatTransfer(ActionEvent e) {
 		JFrame[] windows = calc.getwindowArray();
+		int steadyStatHeat = 3;
+		if(e.getActionCommand().equals("Steady State")) {
+			windows[steadyStatHeat].setLocation(windows[calc.getCurrentWindow()].getLocation());
+			windows[steadyStatHeat].setVisible(true);
+			windows[calc.getCurrentWindow()].setVisible(false);
+			calc.setCurrentWindwo(steadyStatHeat);
+		}
 		
 	}
 	private void massTransfer(ActionEvent e) {
@@ -61,5 +70,6 @@ public class ButtonController extends Frame implements ActionListener  {
 		calc.setCurrentWindwo(0);
 		windows[currentWindow].setVisible(false);
 	}
+	
 	
 }

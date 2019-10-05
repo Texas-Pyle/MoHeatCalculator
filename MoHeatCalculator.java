@@ -5,11 +5,11 @@ import java.io.*;
 import javax.swing.*;
 
 public class MoHeatCalculator extends JFrame {
-	private String[] buttonNames = {"Heat Transfer","Mass Transfer","Steady State","Un Steady State","Go Back"};
+	private String[] buttonNames = {"Heat Transfer","Mass Transfer","Steady State","Un Steady State","Go Back","wall","pipe","cylinder"};
 	private String[] textFeildNames;
-	private String[] windowNames = {"Start menue","Heat Transfer","Mass Transfer"};
+	private String[] windowNames = {"Start menue","Heat Transfer","Mass Transfer","Steady Heat Transfer","Steady Heat Transfer wall"};
 	private ButtonController[] buttons = new ButtonController[buttonNames.length];
-	private JFrame[] windows = new JFrame[3] ;
+	private JFrame[] windows = new JFrame[windowNames.length] ;
 	private MoHeatCalculator calc;
 	private int currentWindow;
 	private ArrayList<int[]> buttonRange = new ArrayList<int[]>();
@@ -42,6 +42,9 @@ public class MoHeatCalculator extends JFrame {
 		windows[2].add(lable);
 		
 		
+		//Stead state heat transfer 
+		buttonInitilizer(100, 100, 60, 60, 50, 150, "Steady Heat Transfer", 2, 1);
+		
 		windows[0].setVisible(true);
 		currentWindow = 0;
 		
@@ -69,7 +72,7 @@ public class MoHeatCalculator extends JFrame {
 	}
 	private void buttonInitilizer(int xIni,int yIni, int xSpacing,int ySpacing,int height,int widith ,String windowName,int rows,int columns) {
 		int desieredWindow = -1;
-		int oldWindow = -1;
+		
 		for (int i = 0; i < windowNames.length; ++i) {
 			 if (windowName.equals(windowNames[i])) {
 				desieredWindow = i;
@@ -104,6 +107,7 @@ public class MoHeatCalculator extends JFrame {
 			buttonRange.add(range);
 			lineData = br.readLine();
 		}
+		br.close();
 	}
 	
 }
