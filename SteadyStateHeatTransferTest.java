@@ -8,29 +8,30 @@ public class SteadyStateHeatTransferTest {
 
 	@Test
 	public void calculateFulxTest() {
-		double[] heatTransferCoeficients = {3,24.8,1500};//first and last one were given second one had to be found in apendix
-		double tempInfinity = 80;//given in problem
-		double temp0 = 0;
-		String[] typeOfheatTransfer = {"Convection","Conduction","Convection"};// needs to be reconized by the user
-		double length[]; //was given in the problem
-		double area[] ;
-			SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(3, heatTransferCoeficients, tempInfinity, temp0, 
-										typeOfheatTransfer, area, length);
+		assertTrue(false);
+		//TODO: 
 	}
 	@Test 
 	public void calculateResistanceTest() {
+		Material [] mat = new Material[3];
+		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
+		mat[0] = new Material("Cartiesian","conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne,0,10);//last two nubers are not relevent to this test
+		
+		double transferCoeficientTwo = 12.1, lengthTwo = 4, widithTwo = 4, depthTwo = 3;
+		mat[1] = new Material("Cartiesian","conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo,0,10);
+		
+		double transferCoeficientThree = 22.4, lengthThree = 7, widiththree = 8, depthThree = 1;
+		mat[2] = new Material("Cartiesian","conduction",transferCoeficientThree,lengthThree,widiththree,depthThree,0,10);
+		
+		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,100,20);
+		double expected = 0;
+		for (int i = 0; i < mat.length ; ++i) {
+			expected += mat[i].getLength()/(mat[i].getHeatTransferCoefficient()*mat[i].getArea());
+		}
+		double actual = st.calculateResistance();
+		assertEquals(expected, actual,0001); 
 		
 	}
-	@Test
-	public void areaCartisianTest(){
-		String typeOfCordinates = "Cartisian" ;
-		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer();
-		double length = 3;
-		double widith = 4;
-		double actual = st.area(typeOfCordinates,length, widith);
-		double expected = length * widith;
-		 Assert.assertEquals(expected, actual);
-		
-	}
+	
 
 }

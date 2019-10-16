@@ -1,25 +1,17 @@
 
 public class SteadyStateHeatTransfer extends HeatTransfer {
-	private int numberOfMaterials;
-	private double[] materalheatTransferCoefficients;
+	private Material[] materials;
 	private double tempinfinity;
 	private double temp0;
-	private String[] typeOfHeatTransfer;
-	private double[] area;
-	private double[] length;
-	
 	public SteadyStateHeatTransfer() {
 		
 	}
-	public SteadyStateHeatTransfer(int numberOfMaterials , double[] materalHeatTransferCoefficients, double tempInfinity,double Temp0,String[]
-									TypeOfHeatTransfer , double[] area,double length[]) {
-		this.numberOfMaterials = numberOfMaterials;
-		this.materalheatTransferCoefficients = materalHeatTransferCoefficients;
+	public SteadyStateHeatTransfer( Material[] material, double tempInfinity
+									 ,double temp0) {
 		this.tempinfinity = tempInfinity;
-		this.temp0 = Temp0;
-		this.typeOfHeatTransfer = TypeOfHeatTransfer;
-		this.area = area;
-		this.length = length;
+		
+		this.materials = material;
+		this.temp0 = temp0;
 		
 	}	@Override
 	protected double calculateFlux() {
@@ -33,21 +25,17 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	private double calculateResistance() {
+	public double calculateResistance() {
 		double totalResistance = 0;
-		for (int i = 0; i < materalheatTransferCoefficients.length; ++i) {
-			if (typeOfHeatTransfer[i].equals("convection")) {
-				totalResistance += 1/(materalheatTransferCoefficients[i] * area[i]);
+		for (int i = 0; i < materials.length; ++i) {
+			if (materials[i].getTypeOfHeatTransfer().equals("convection")) {
+				totalResistance += 1/(materials[i].getHeatTransferCoefficient() * materials[i].getArea());
 			}else {
-				totalResistance += length[i]/(area[i]*materalheatTransferCoefficients[i]);
+				totalResistance += materials[i].getLength()/(materials[i].getArea() * materials[i].getHeatTransferCoefficient());
 			}
 		}
 		
 		return totalResistance;
 	}
-	public double area(String typeOfCordinates, double xlenght,double ylength) {
-		
-		
-		return 0;
-	}
+	
 }
