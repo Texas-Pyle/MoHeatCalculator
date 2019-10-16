@@ -12,7 +12,7 @@ public class SteadyStateHeatTransferTest {
 		//TODO: 
 	}
 	@Test 
-	public void calculateResistanceTest() {
+	public void calculateResistanceCartiesianTest() {
 		Material [] mat = new Material[3];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
 		mat[0] = new Material("Cartiesian","conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne,0,10);//last two nubers are not relevent to this test
@@ -24,10 +24,10 @@ public class SteadyStateHeatTransferTest {
 		mat[2] = new Material("Cartiesian","conduction",transferCoeficientThree,lengthThree,widiththree,depthThree,0,10);
 		
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,100,20);
-		double expected = 0;
-		for (int i = 0; i < mat.length ; ++i) {
-			expected += mat[i].getLength()/(mat[i].getHeatTransferCoefficient()*mat[i].getArea());
-		}
+		double expected = lenghtOne/(transferCoeficientOne*lenghtOne*depthOne);
+		expected += lengthTwo/(transferCoeficientTwo*lengthTwo*depthTwo);
+		expected += lengthThree/(transferCoeficientThree*lengthThree*depthThree);
+		
 		double actual = st.calculateResistance();
 		assertEquals(expected, actual,0001); 
 		
