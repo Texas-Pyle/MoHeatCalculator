@@ -17,7 +17,7 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 	protected double calculateFlux() {
 		// TODO Auto-generated method stub
 		
-		return (temp0 - tempinfinity)/calculateResistance();
+		return (tempinfinity - temp0)/calculateResistance();
 	}
 
 	@Override
