@@ -90,6 +90,9 @@ public class SteadyStateHeatTransferTest {
 		
 		
 	}
-	
+	@Test 
+	public void calculateTotalResistanceOfCylinderTest() {
+		
+	}
 
 }
