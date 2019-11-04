@@ -10,10 +10,10 @@ public class SteadyStateHeatTransferTest {
 	public void calculateFulxCondutionOnlyTest() {
 		Material [] mat = new Material [2];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
-		mat[0] = new Material("Cartiesian","conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne,0,10);//last two nubers are not relevent to this test
+		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);//last two nubers are not relevent to this test
 		
 		double transferCoeficientTwo = 12.1, lengthTwo = 4, widithTwo = 4, depthTwo = 3;
-		mat[1] = new Material("Cartiesian","conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo,0,10);
+		mat[1] = new Material("conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo);
 		
 		int tnot = 20;
 		int tinfinity = 100;
@@ -31,13 +31,13 @@ public class SteadyStateHeatTransferTest {
 	public void calculateResistanceCartiesianTest() {
 		Material [] mat = new Material[3];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
-		mat[0] = new Material("Cartiesian","conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne,0,10);//last two nubers are not relevent to this test
+		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
 		
 		double transferCoeficientTwo = 12.1, lengthTwo = 4, widithTwo = 4, depthTwo = 3;
-		mat[1] = new Material("Cartiesian","conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo,0,10);
+		mat[1] = new Material("conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo);
 		
 		double transferCoeficientThree = 22.4, lengthThree = 7, widiththree = 8, depthThree = 1;
-		mat[2] = new Material("Cartiesian","conduction",transferCoeficientThree,lengthThree,widiththree,depthThree,0,10);
+		mat[2] = new Material("conduction",transferCoeficientThree,lengthThree,widiththree,depthThree);
 		
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,100,20);
 		double expected = lenghtOne/(transferCoeficientOne*widithOne*depthOne);
@@ -53,17 +53,17 @@ public class SteadyStateHeatTransferTest {
 	public void calculateConvectiveResistances() {
 		Material [] mat = new Material[2];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
-		mat[0] = new Material("Cartiesian","conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne,0,10);//last two numbers are not relevant to this test
+		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
 		
 		// convection happens on a surface of another material so there is no materials just the conductive heat transfer coefficient.
 		double transferCoefficientTwo = 21.2, lengthTwo = 0, widithTwo = 0, depthTwo = 0;
-		mat[1] = new Material("Cartiesian","convection",transferCoefficientTwo,lengthTwo,widithTwo,depthTwo,0,0);
+		mat[1] = new Material("convection",transferCoefficientTwo,lengthTwo,widithTwo,depthTwo);
 		
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,100,20);// last two numbers are not relevant to this test.
 		double expected = lenghtOne/(transferCoeficientOne*widithOne*depthOne);
 		expected +=  1 / (transferCoefficientTwo * widithOne * depthOne);
 		double actual = st.calculateResistance();
-		assertEquals(expected, actual,.00001);
+		assertEquals(expected, actual,.00001); 
 		
 	}
 	/* this test includes both resistance of conduction and convention
@@ -74,10 +74,10 @@ public class SteadyStateHeatTransferTest {
 	public void calculateTotalFlux() {
 		Material [] mat = new Material[2];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
-		mat[0] = new Material("Cartiesian","conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne,0,10);//last two numbers are not relevant to this test
+		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
 		
 		double transferCoefficientTwo = 21.2, lengthTwo = 0, widithTwo = 0, depthTwo = 0;
-		mat[1] = new Material("Cartiesian","convection",transferCoefficientTwo,lengthTwo,widithTwo,depthTwo,0,0);
+		mat[1] = new Material("convection",transferCoefficientTwo,lengthTwo,widithTwo,depthTwo);
 		
 		int tempInfinity =  40;
 		int temp0 = 400;
@@ -92,6 +92,20 @@ public class SteadyStateHeatTransferTest {
 	}
 	@Test 
 	public void calculateTotalResistanceOfCylinderTest() {
+		Material [] mat = new Material [2] ;
+		double transferCoeficientOne = 32.1,innerDiameterOne = 2,LengthOne = 4, thicknessOne = 4, outterDaimeterOne = 6 ;
+		// usually the outter diameter or thickness will be given but not both.  
+		mat[0] = new Material("conduction",transferCoeficientOne,LengthOne,innerDiameterOne,thicknessOne,outterDaimeterOne);
+		
+		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat, 0, 0);// the zeros are not important to this test.
+		
+		double transferCoefficientTwo = 21.2, innerDiameterTwo = 5,  LengthTwo = 9 ,thicknessTwo = 2 , outterDiamaterTwo = 7;
+		mat[1] = new Material("conduction",transferCoefficientTwo,LengthTwo,innerDiameterTwo,thicknessTwo,outterDiamaterTwo);
+		double expected = Math.log(outterDaimeterOne/innerDiameterOne)/(LengthOne * 2 * Math.PI * transferCoeficientOne );
+		expected += Math.log(outterDiamaterTwo/innerDiameterTwo)/(LengthTwo * 2 * Math.PI * transferCoefficientTwo);
+		double actual = st.calculateResistance();
+		assertEquals(expected, actual,.001);
+		
 		
 	}
 

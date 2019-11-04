@@ -1,3 +1,4 @@
+import java.time.chrono.ThaiBuddhistChronology;
 
 public class Material {
 	private double area;
@@ -7,27 +8,43 @@ public class Material {
 	private double temperature;
 	private double widith;
 	private double depth;// will be 0 if not using cartesian
+	private String typeOfGeometry;
 	String typeOfHeatTransfer;
+	private double thickness;
+	private double innderDiameter;
+	private double outterDiameter;
 	public Material() {
 		
 	}
-	public Material(String typeOfGeometry, String typeOfHeatTranfer,double heatTransfercoefficients,double Length,double widith,double depth,double diameter,double temperature) {
+	// cylindrical constructor
+	public Material (String typeOfHeatTransfer, double heatTransferCoefficients, double length, double innerDiameter, double Thickness, double outerDiamter) {
+		this.typeOfHeatTransfer = typeOfHeatTransfer;
+		this.heatTransferCoefficient = heatTransferCoefficients;
+		this.length = length;
+		this.innderDiameter = innerDiameter;
+		this.thickness = Thickness;
+		this.outterDiameter = outterDiameter;
+		this.typeOfGeometry = "cylindrical";
+		areaCylindrical(innerDiameter, outerDiamter);
 		
-		this.heatTransferCoefficient = heatTransfercoefficients;
-		this.length = typeOfGeometry.equals("Spherical") ? 0: Length;
-		this.diameter = typeOfGeometry.equals("Cartiesian") ? 0 :diameter;
-		this.depth = typeOfGeometry.equals("Cartiesian") ? depth :0;
-		this.temperature = temperature;
+	}// spherical consturctor
+	public Material (String typeOfHeatTransfer, double heatTransferCoefficients, double Diamater, double Thickness){
+		this.typeOfHeatTransfer = typeOfHeatTransfer;
+		this.heatTransferCoefficient = heatTransferCoefficients;
+		this.diameter = Diamater;
+		this.thickness = Thickness;
+		this.typeOfGeometry = "spherical";
+		areaSpherical(Diamater);
+	}
+	// cartesian constructor 
+	public Material( String typeOfHeatTranfer,double heatTransfercoefficients,double Length,double widith,double depth) {
+		this.typeOfGeometry = "cartesian";
 		this.typeOfHeatTransfer = typeOfHeatTranfer;
+		this.heatTransferCoefficient = heatTransfercoefficients;
+		this.length = Length;
 		this.widith = widith;
-		switch (typeOfGeometry) {
-		case "Cartiesian":
-			areaCartisian(widith, depth);
-			break;
-
-		default:
-			break;
-		}
+		this.depth = depth;
+		areaCartisian(depth, widith);
 		
 	}
 	public double getArea() {
@@ -58,5 +75,8 @@ public class Material {
 	}
 	public void areaCylindrical(double diamater ,double length) {
 		area = Math.PI*(diamater/2)*length;
+	}
+	public String getTypeOfgeometry() {
+		return typeOfGeometry;
 	}
 }

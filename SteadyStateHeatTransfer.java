@@ -29,6 +29,7 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		double totalResistance = 0;
 		//for convection we must use the area of the previous material unless it is the first then we use the next material area
 		//this is because the convecition is acting on a surface it doens not have area of its own because its a gas
+		if ( materials[0].getTypeOfgeometry().equals("cartesian")) {
 		for (int i = 0; i < materials.length; ++i) {
 			if (materials[i].getTypeOfHeatTransfer().equals("convection")) {
 				if (i == 0) {
@@ -39,9 +40,15 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 			}else {
 				totalResistance += materials[i].getLength()/(materials[i].getArea() * materials[i].getHeatTransferCoefficient());
 			}
-		} 
+		}
+		}else if (materials[0].getTypeOfgeometry().equals("cylindrical")) { 
+			//TODO: write cylindrical total resistance
+		}else {
+			//TODO: write spherical cordinates
+		}
 		
 		return totalResistance;
 	}
+	
 	
 }

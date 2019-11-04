@@ -10,7 +10,7 @@ public class MaterialTest {
 		Material  mt = new Material();
 		double length = 3;
 		double widith = 4;
-		mt.areaCartisian(length, widith);
+		mt.areaCartisian(length, widith); 
 		double actual = mt.getArea();
 		double expected = length * widith;
 		 assertEquals(expected, actual,.0001); 
