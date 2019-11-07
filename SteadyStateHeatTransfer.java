@@ -42,7 +42,18 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 			}
 		}
 		}else if (materials[0].getTypeOfgeometry().equals("cylindrical")) { 
-			//TODO: write cylindrical total resistance
+			for (int i = 0; i < materials.length; ++i) {
+				if (materials[i].getTypeOfHeatTransfer().equals("convection")) {
+					if (i == 0) {
+						totalResistance += 1/(materials[i + 1].getHeatTransferCoefficient() * materials[i +1 ].getArea());
+					}else {
+						totalResistance += 1/(materials[i - 1].getHeatTransferCoefficient() * materials[i - 1 ].getArea()); 
+					}
+				}else {
+					totalResistance += Math.log(materials[i].getOutterDiameter() / materials[i].getInnderDiameter())/
+							(2 * Math.PI * materials[i].getHeatTransferCoefficient() * materials[i].getLength());
+				}
+			} 
 		}else {
 			//TODO: write spherical cordinates
 		}

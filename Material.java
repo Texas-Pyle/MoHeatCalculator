@@ -23,7 +23,7 @@ public class Material {
 		this.length = length;
 		this.innderDiameter = innerDiameter;
 		this.thickness = Thickness;
-		this.outterDiameter = outterDiameter;
+		this.outterDiameter = outerDiamter;
 		this.typeOfGeometry = "cylindrical";
 		areaCylindrical(innerDiameter, outerDiamter);
 		
@@ -78,5 +78,17 @@ public class Material {
 	}
 	public String getTypeOfgeometry() {
 		return typeOfGeometry;
+	}
+	public double getInnderDiameter() {
+		return innderDiameter;
+	}
+	public void setInnderDiameter(double innderDiameter) {
+		this.innderDiameter = innderDiameter;
+	}
+	public double getOutterDiameter() {
+		return outterDiameter;
+	}
+	public void setOutterDiameter(double outterDiameter) {
+		this.outterDiameter = outterDiameter;
 	}
 }

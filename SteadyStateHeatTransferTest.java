@@ -104,7 +104,7 @@ public class SteadyStateHeatTransferTest {
 		double expected = Math.log(outterDaimeterOne/innerDiameterOne)/(LengthOne * 2 * Math.PI * transferCoeficientOne );
 		expected += Math.log(outterDiamaterTwo/innerDiameterTwo)/(LengthTwo * 2 * Math.PI * transferCoefficientTwo);
 		double actual = st.calculateResistance();
-		assertEquals(expected, actual,.001);
+		assertEquals(expected, actual,.001); 
 		
 		
 	}
