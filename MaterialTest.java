@@ -38,4 +38,18 @@ public class MaterialTest {
 		
 		
 	}
+	@Test
+	public void positionTest() {
+		//fisrt test is if position is not set 
+		Material  mt = new Material();
+		assertEquals(false, mt.isParrell(new Material()));
+		//second test is if they are parrells
+		mt.setPosition(3);
+		Material mt2 = new Material();
+		mt2.setPosition(3);
+		assertEquals(true, mt.isParrell(mt2));
+		//third test is if they are not equal 
+		mt.setPosition(4);
+		assertEquals(false, mt.isParrell(mt2));
+	}
 }

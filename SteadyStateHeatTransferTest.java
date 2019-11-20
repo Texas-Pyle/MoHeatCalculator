@@ -23,7 +23,7 @@ public class SteadyStateHeatTransferTest {
 		double totalResistance = lenghtOne/(transferCoeficientOne*widithOne*depthOne);
 		totalResistance += lengthTwo/(transferCoeficientTwo*widithTwo*depthTwo);
 		double expected = (tinfinity - tnot)/totalResistance;
-		
+		 
 		assertEquals(expected, actual,.000001);
 		//TODO: 
 	}

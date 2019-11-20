@@ -13,6 +13,7 @@ public class Material {
 	private double thickness;
 	private double innderDiameter;
 	private double outterDiameter;
+	private Double position; 
 	public Material() {
 		
 	}
@@ -90,5 +91,21 @@ public class Material {
 	}
 	public void setOutterDiameter(double outterDiameter) {
 		this.outterDiameter = outterDiameter;
+	}
+	public Double getPosition() {
+		return position;
+	}
+	public void setPosition(double position) {
+		this.position = position;
+	}
+	public boolean isParrell(Material mat) {
+		if (this.position == null || mat.getPosition() == null) {
+			return false; 
+		}
+		else if (this.position.equals( mat.getPosition())) {
+			return true;
+		 }
+		return false;
+		
 	}
 }

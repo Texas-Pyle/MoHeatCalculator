@@ -15,14 +15,14 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		
 	}	@Override
 	protected double calculateFlux() {
-		// TODO Auto-generated method stub
+	
 		
 		return Math.abs(tempinfinity - temp0)/calculateResistance();
 	}
 
 	@Override
 	protected double calculateTemperature(double pos) {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 	public double calculateResistance() {
@@ -31,31 +31,31 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		//this is because the convecition is acting on a surface it doens not have area of its own because its a gas
 		if ( materials[0].getTypeOfgeometry().equals("cartesian")) {
 		for (int i = 0; i < materials.length; ++i) {
-			if (materials[i].getTypeOfHeatTransfer().equals("convection")) {
-				if (i == 0) {
-				totalResistance += 1/(materials[i].getHeatTransferCoefficient() * materials[i+1].getArea());
-				}else {
-					totalResistance += 1/(materials[i].getHeatTransferCoefficient() * materials[i-1].getArea());
+			// making sure we are in a series type of heat transfer
+			if(!(i == materials.length - 1 ? false : materials[i].isParrell(materials[i+1]))) {
+				
+				if (materials[i].getTypeOfHeatTransfer().equals("convection")) {
+					totalResistance += 1/(materials[i].getHeatTransferCoefficient() * materials[i == 
+							0  ?  i + 1 : i -1].getArea());
+				}else { 
+					totalResistance += materials[i].getLength()/(materials[i].getArea() * materials[i].getHeatTransferCoefficient());
 				}
-			}else {
-				totalResistance += materials[i].getLength()/(materials[i].getArea() * materials[i].getHeatTransferCoefficient());
+			}
+			// calculations when materials are in series 
+				else {
+				//TODO: series calcualtion
 			}
 		}
 		}else if (materials[0].getTypeOfgeometry().equals("cylindrical")) { 
 			for (int i = 0; i < materials.length; ++i) {
 				if (materials[i].getTypeOfHeatTransfer().equals("convection")) {
-					if (i == 0) {
-						totalResistance += 1/(materials[i + 1].getHeatTransferCoefficient() * materials[i +1 ].getArea());
-					}else {
-						totalResistance += 1/(materials[i - 1].getHeatTransferCoefficient() * materials[i - 1 ].getArea()); 
-					}
+						totalResistance += 1/(materials[i == 0 ? i + 1: i -1].getHeatTransferCoefficient() * 
+								materials[i == 0 ? i + 1: i -1 ].getArea());
 				}else {
 					totalResistance += Math.log(materials[i].getOutterDiameter() / materials[i].getInnderDiameter())/
 							(2 * Math.PI * materials[i].getHeatTransferCoefficient() * materials[i].getLength());
 				}
 			} 
-		}else {
-			//TODO: write spherical cordinates
 		}
 		
 		return totalResistance;
@@ -63,3 +63,4 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 	
 	
 }
+	
