@@ -41,9 +41,12 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 					totalResistance += materials[i].getLength()/(materials[i].getArea() * materials[i].getHeatTransferCoefficient());
 				}
 			}
-			// calculations when materials are in series 
+			// calculations when materials are in series only in conduction 
 				else {
 				//TODO: series calcualtion
+					totalResistance += materials[i].getLength() * (1/(materials[i].getHeatTransferCoefficient()*materials[i].getHeight() + materials[i + 1].getHeatTransferCoefficient()* 
+								materials[i+1].getHeight()));
+					i++; //included two material in this calculation
 			}
 		}
 		}else if (materials[0].getTypeOfgeometry().equals("cylindrical")) { 

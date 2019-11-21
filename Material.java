@@ -108,4 +108,8 @@ public class Material {
 		return false;
 		
 	}
+	public double getHeight() {
+		// TODO Auto-generated method stub
+		return widith;
+	}
 }
