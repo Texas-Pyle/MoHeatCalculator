@@ -14,14 +14,14 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		this.temp0 = temp0;
 		
 	}	@Override
-	protected double calculateFlux() {
+	public double calculateFlux() {
 	
 		
 		return Math.abs(tempinfinity - temp0)/calculateResistance();
 	}
 
 	@Override
-	protected double calculateTemperature(double pos) {
+	public double calculateTemperature(double pos) {
 		
 		return 0;
 	}
@@ -43,7 +43,6 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 			}
 			// calculations when materials are in series only in conduction 
 				else {
-				//TODO: series calcualtion
 					totalResistance += materials[i].getLength() * (1/(materials[i].getHeatTransferCoefficient()*materials[i].getHeight() + materials[i + 1].getHeatTransferCoefficient()* 
 								materials[i+1].getHeight()));
 					i++; //included two material in this calculation
@@ -63,7 +62,9 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		
 		return totalResistance;
 	}
-	
+	public double cylindricalSolidHomogeneousEnergyGeneration(double heatGeneration) {
+		return Math.PI* Math.pow((materials[0].getDiameter()/2),2) * materials[0].getLength() * heatGeneration;
+	}
 	
 }
 	
