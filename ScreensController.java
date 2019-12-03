@@ -36,12 +36,12 @@ public class ScreensController extends StackPane implements Loader  {
 	public boolean setScreen(final String name) {
 		if (screens.containsKey(name)) {
 			if (currentScreen != null) {
-				((Loader) screens.get(currentScreen)).getPane().setOpacity(0.0);
-				((Loader) screens.get(name)).getPane().setOpacity(1.0);
+				((Loader) screens.get(currentScreen)).getPane().setVisible(false);
+				((Loader) screens.get(name)).getPane().setVisible(true);;
 				((Loader) screens.get(name)).setScreenParent(this);
 				currentScreen = name;
 			}else {
-				((Loader) screens.get(name)).getPane().setOpacity(1.0);
+				((Loader) screens.get(name)).getPane().setVisible(true);
 				((Loader) screens.get(name)).setScreenParent(this);
 				currentScreen = name;
 			}
