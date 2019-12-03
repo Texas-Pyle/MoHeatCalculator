@@ -39,9 +39,11 @@ public class ScreensController implements Loader {
 				((Loader) screens.get(currentScreen)).getPane().setOpacity(0.0);
 				((Loader) screens.get(name)).getPane().setOpacity(1.0);
 				((Loader) screens.get(name)).setScreenParent(this);
+				currentScreen = name;
 			}else {
 				((Loader) screens.get(name)).getPane().setOpacity(1.0);
 				((Loader) screens.get(name)).setScreenParent(this);
+				currentScreen = name;
 			}
 			return true;
 		}else 

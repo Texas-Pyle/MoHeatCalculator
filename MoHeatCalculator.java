@@ -22,6 +22,7 @@ public class MoHeatCalculator  extends Application {
 		
 		ScreensController sc = new ScreensController();
 		sc.loadScreen("Main Menue", new MainMenue());
+		sc.loadScreen("Steady State", new SteadyStateScrene());
 		
 		sc.setScreen("Main Menue");
 		

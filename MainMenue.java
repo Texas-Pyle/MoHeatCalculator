@@ -72,7 +72,7 @@ public class MainMenue implements  Loader  {
 	SteadyStateHeatTransfer.setOnAction(new EventHandler<ActionEvent>() {
 		@Override 
 		public void handle (ActionEvent event) {
-			System.out.println("working");
+			myController.setScreen("Steady State");
 		}
 	});
 	}
