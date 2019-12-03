@@ -3,11 +3,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 
 public class SteadyStateScrene implements Loader{
 	ScreensController myController;
-	
+	ColumnConstraints colum1,colum2;
+	RowConstraints row1, row2, row3,row4,row5,row6,row7,row8;
 	GridPane pane;
 	RadioButton  walls;
 	RadioButton  cylinders;
@@ -19,12 +29,32 @@ public class SteadyStateScrene implements Loader{
 	Button removeMaterial;
 	Button CalculateHeatTransfer;
 	
+	Pane drawingBoard;
 
 	@Override
 	public void loadUp() {
 		initilizeBoxes();
 		initilizeButtons();
+		initilizDrawingBoard();
 		initilizeFrame();
+		
+		SteadyStateScrene st = this;
+		try {
+			st.Listener();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void initilizDrawingBoard() {
+		drawingBoard = new Pane();
+		drawingBoard.setMaxSize(10000, 10000);
+		drawingBoard.setMinSize(100, 100);
+		
+		drawingBoard.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
+	            new BorderWidths(1))));
 		
 	}
 
@@ -35,12 +65,44 @@ public class SteadyStateScrene implements Loader{
 		Insets gridPadding = new Insets(10,10,10,10);
 		pane.setPadding(gridPadding);
 		
-		pane.add(walls, 4, 3);
-		pane.add(cylinders, 4, 4);
-		pane.add(spheres, 4, 5);
-		pane.add(addMaterial, 4, 6);
-		pane.add(removeMaterial, 4, 7);
-		pane.add(CalculateHeatTransfer, 4, 8);
+		colum1 = new ColumnConstraints();
+		colum2 = new ColumnConstraints();
+		colum1.setPercentWidth(80);
+		colum2.setPercentWidth(20);
+		pane.getColumnConstraints().addAll(colum1,colum2);
+		
+		row1 = new RowConstraints();
+		row2 = new RowConstraints();
+		row3 = new RowConstraints();
+		row4 = new RowConstraints();
+		row5 = new RowConstraints();
+		row6 = new RowConstraints();
+		row7 = new RowConstraints();
+		row8 = new RowConstraints();
+		
+		row1.setPercentHeight(5);
+		row2.setPercentHeight(5);
+		row3.setPercentHeight(5);
+		row4.setPercentHeight(5);
+		row5.setPercentHeight(5);
+		row6.setPercentHeight(5);
+		row7.setPercentHeight(70);
+		//row8.setPercentHeight(5);
+		
+		pane.getRowConstraints().addAll(row1,row2,row3,row4,row5,row6,row7);
+		
+		
+		
+		pane.setColumnSpan(drawingBoard, 1);
+		pane.setRowSpan(drawingBoard, 7);
+		
+		pane.add(walls, 1, 0);
+		pane.add(cylinders, 1, 1);
+		pane.add(spheres, 1, 2);
+		pane.add(addMaterial, 1, 3);
+		pane.add(removeMaterial, 1, 4);
+		pane.add(CalculateHeatTransfer, 1, 5);
+		pane.add(drawingBoard, 0, 0);
 		pane.setOpacity(0.0);
 		
 	}

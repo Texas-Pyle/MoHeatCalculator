@@ -12,7 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-public class ScreensController implements Loader {
+public class ScreensController extends StackPane implements Loader  {
 	String currentScreen;
 	// holds the screens to be displayed 
 	private HashMap<String,Object> screens = new HashMap<>(); 
@@ -29,7 +29,7 @@ public class ScreensController implements Loader {
 			return false;
 		}
 		
-		
+		  
 		
 	}
 	// turn one screen on and the current one off
