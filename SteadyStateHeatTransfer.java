@@ -66,5 +66,13 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 		return Math.PI* Math.pow((materials[0].getDiameter()/2),2) * materials[0].getLength() * heatGeneration;
 	}
 	
+	public double extenedeSurfaceEfficiency() {
+		//TODO:
+	}
+	public double heatTranferOfextendedSurface() {
+		//TODO:
+	}
 }
+ 
+
 	
