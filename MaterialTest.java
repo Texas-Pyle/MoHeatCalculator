@@ -31,7 +31,7 @@ public class MaterialTest {
 	public void areaSphereTest() {
 		Material  mt = new Material();
 		double diameter = 4;
-		double expected = Math.PI*diameter;
+		double expected = Math.PI*diameter; 
 		mt.areaSpherical(diameter);
 		double actual = mt.getArea();
 		assertEquals(expected, actual,.0001);

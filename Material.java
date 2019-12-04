@@ -13,7 +13,7 @@ public class Material {
 	private double thickness;
 	private double innderDiameter;
 	private double outterDiameter;
-	private Double position; 
+	private Position position ; 
 	public Material() {
 		
 	}
@@ -25,14 +25,14 @@ public class Material {
 		this.innderDiameter = innerDiameter;
 		this.thickness = Thickness;
 		this.outterDiameter = outerDiamter;
-		this.typeOfGeometry = "cylindrical";
+		this.typeOfGeometry = "cylindrical"; 
 		areaCylindrical(innerDiameter, outerDiamter);
 		
 	}// spherical consturctor
 	public Material (String typeOfHeatTransfer, double heatTransferCoefficients, double Diamater, double Thickness){
 		this.typeOfHeatTransfer = typeOfHeatTransfer;
 		this.heatTransferCoefficient = heatTransferCoefficients;
-		this.diameter = Diamater;
+		this.diameter = Diamater; 
 		this.thickness = Thickness;
 		this.typeOfGeometry = "spherical";
 		areaSpherical(Diamater);
@@ -43,7 +43,7 @@ public class Material {
 		this.typeOfHeatTransfer = typeOfHeatTranfer;
 		this.heatTransferCoefficient = heatTransfercoefficients;
 		this.length = Length;
-		this.widith = widith;
+		this.widith = widith;// note that the widith can be seen as the height as well
 		this.depth = depth;
 		areaCartisian(depth, widith);
 		
@@ -92,20 +92,15 @@ public class Material {
 	public void setOutterDiameter(double outterDiameter) {
 		this.outterDiameter = outterDiameter;
 	}
-	public Double getPosition() {
+	public Position getPosition() {
+		
 		return position;
 	}
-	public void setPosition(double position) {
+	public void setPosition(Position position) {
 		this.position = position;
 	}
 	public boolean isParrell(Material mat) {
-		if (this.position == null || mat.getPosition() == null) {
-			return false; 
-		}
-		else if (this.position.equals( mat.getPosition())) {
-			return true;
-		 }
-		return false;
+		return this.position.isBetween(mat.getPosition());
 		
 	}
 	public double getHeight() {

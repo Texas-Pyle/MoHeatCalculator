@@ -22,7 +22,7 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 
 	@Override
 	public double calculateTemperature(double pos) {
-		
+		 
 		return 0;
 	}
 	public double calculateResistance() {
@@ -43,6 +43,7 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 			}
 			// calculations when materials are in series only in conduction 
 				else {
+					//TODO: this needs to be the posisiton of the parallel materail not just the length of the material 
 					totalResistance += materials[i].getLength() * (1/(materials[i].getHeatTransferCoefficient()*materials[i].getHeight() + materials[i + 1].getHeatTransferCoefficient()* 
 								materials[i+1].getHeight()));
 					i++; //included two material in this calculation
@@ -57,7 +58,7 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 					totalResistance += Math.log(materials[i].getOutterDiameter() / materials[i].getInnderDiameter())/
 							(2 * Math.PI * materials[i].getHeatTransferCoefficient() * materials[i].getLength());
 				}
-			} 
+			}  
 		}
 		
 		return totalResistance;
@@ -67,9 +68,11 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 	}
 	
 	public double extenedeSurfaceEfficiency() {
+		return temp0;
 		//TODO:
 	}
 	public double heatTranferOfextendedSurface() {
+		return temp0;
 		//TODO:
 	}
 }

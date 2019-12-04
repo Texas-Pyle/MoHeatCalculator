@@ -1,14 +1,21 @@
+
 import java.util.ArrayList;
+
+import com.sun.javafx.scene.paint.GradientUtils.Point;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -19,14 +26,17 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 public class SteadyStateScrene implements Loader{
 	ArrayList<Material> materials = new ArrayList<Material>();
 	
 	ScreensController myController;
 	ColumnConstraints colum1,colum2,colum3;
-	RowConstraints row1, row2, row3,row4,row5,row6,row7,row8,row9,row10,row11;
+	RowConstraints row1, row2, row3,row4,row5,row6,row7,row8,row9,row10,row11,row12,row13,row14;
 	GridPane pane;
 	RadioButton  walls;
 	RadioButton  cylinders;
@@ -37,31 +47,50 @@ public class SteadyStateScrene implements Loader{
 	Button addMaterial;
 	Button removeMaterial;
 	Button CalculateHeatTransfer;
+	Button popUpOk;
+	Button parrell;
 	
 	
-	Pane drawingBoard;
+	//Pane drawingBoard;  dont have engout time to get to work 
 	
 	TextField height;//will not be used in spherical or cylindrical
 	TextField length;
 	TextField depth;// will be used as diameter for cylindrical and spherical
 	TextField heatTransferCoefficient;
+	TextField tempInfinity;
+	TextField temp0;
+	TextField popUpHeightText, popUpLengthText , popUpNumberOfMaterials, distanceInBetween , popUpXcordinate;
 	
 	Label heightLabel;
 	Label lengthlabel; 
 	Label depthLabel;
 	Label heatTransferCoefficientLabel;
+	Label tempInfinityLabel;
+	Label temp0Label;
+	Label popupLength;
+	Label popupHeight, popupNumberofMaterialsLabel, distanceInBetweenLabel, xCordinatelabel;
 	
+	TextArea textArea ;
 	
+	GridPane parallelMaterial;
 	
+	double initialMaterialx;
+	double initialMaterialy;
 	
+	boolean isAdding = false;
+	
+	// for the popup 
+	Stage popup;
+	Scene popupScene;
 
 	@Override
 	public void loadUp() {
 		initilizeBoxes();
 		initilizeButtons();
 		initilizeTextField();
-		
-		initilizDrawingBoard();
+		//initilizDrawingBoard();
+		initilizePopUp();
+		initilizeTextArea();
 		initilizeFrame();
 		
 		
@@ -76,28 +105,79 @@ public class SteadyStateScrene implements Loader{
 	}
 
 	
+	private void initilizePopUp() {
+		parallelMaterial = new GridPane();
+		popupHeight = new Label("height");
+		popupLength = new Label ("length");
+		popupNumberofMaterialsLabel = new Label ("number of materials");
+		distanceInBetweenLabel = new Label ( "distance inbetween materials");
+		xCordinatelabel = new Label("distance from origin ft");
+		popUpOk = new Button("add");
+		popUpLengthText = new TextField();
+		popUpHeightText = new TextField();
+		popUpNumberOfMaterials = new TextField();
+		distanceInBetween = new TextField();
+		popUpXcordinate = new TextField();
+		parallelMaterial.add(popupHeight, 1, 1);
+		parallelMaterial.add(popUpHeightText, 2, 1);
+		parallelMaterial.add(popupLength, 1, 2);
+		parallelMaterial.add(popUpLengthText, 2, 2);
+		parallelMaterial.add(popUpOk, 1	, 6);
+		parallelMaterial.add(popupNumberofMaterialsLabel, 1, 3);
+		parallelMaterial.add(popUpNumberOfMaterials, 2, 3);
+		parallelMaterial.add(distanceInBetweenLabel, 1, 4);
+		parallelMaterial.add(distanceInBetween, 2, 4);
+		parallelMaterial.add(xCordinatelabel, 1, 5);
+		parallelMaterial.add(popUpXcordinate, 2, 5);
+		
+		parallelMaterial.setVisible(false);
+		parallelMaterial.setVgap(10);
+		parallelMaterial.setHgap(10);
+		Insets gridPadding = new Insets(10,10,10,10);
+		parallelMaterial.setPadding(gridPadding);
+		// this must be done here and not in the event listner because a pane can only be added to one scenep; 
+		 popupScene = new Scene(parallelMaterial);
+	
+		
+	}
+
+
+	private void initilizeTextArea() {
+		textArea = new TextArea();
+		textArea.setFont(new Font(25));
+		textArea.setEditable(false);
+		
+		
+	}
+
+
 	private void initilizeTextField() {
 		height = new TextField();
 		length = new TextField();
 		depth = new TextField();
+		tempInfinity = new TextField();
+		temp0 = new TextField();
 		heatTransferCoefficient = new TextField();
-		heightLabel = new Label("height");
-		lengthlabel = new Label("Lenght");
-		depthLabel = new Label("Depth");
+		heightLabel = new Label("height ft");
+		lengthlabel = new Label("Lenght ft");
+		depthLabel = new Label("Depth ft");
+		temp0Label = new Label("temp0 F");
+		tempInfinityLabel = new Label("Temp infinity F");
 		clearTextFields();
-		heatTransferCoefficientLabel = new Label("K");
+		heatTransferCoefficientLabel = new Label("K (Btu/h ft F)");
+		
 		
 	}
 
-	private void initilizDrawingBoard() {
-		drawingBoard = new Pane();
-		drawingBoard.setMaxSize(10000, 10000);
-		drawingBoard.setMinSize(100, 100);
-		
-		drawingBoard.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
-	            new BorderWidths(1))));
-		
-	}
+//	private void initilizDrawingBoard() {
+//		drawingBoard = new Pane();
+//		drawingBoard.setMaxSize(10000, 10000);
+//		drawingBoard.setMinSize(100, 100);
+//		
+//		drawingBoard.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
+//	            new BorderWidths(1))));
+//		
+//	}
 
 	private void initilizeFrame() {
 		pane = new GridPane();
@@ -125,6 +205,9 @@ public class SteadyStateScrene implements Loader{
 		row9 = new RowConstraints();
 		row10 = new RowConstraints();
 		row11 = new RowConstraints();
+		row12 = new RowConstraints();
+		row13 = new RowConstraints();
+		
 		
 		row1.setPercentHeight(5);
 		row2.setPercentHeight(5);
@@ -136,19 +219,22 @@ public class SteadyStateScrene implements Loader{
 		row8.setPercentHeight(5);
 		row9.setPercentHeight(5);
 		row10.setPercentHeight(5);
-		row11.setPercentHeight(50);
+		row11.setPercentHeight(5);
+		row12.setPercentHeight(5);
+		row13.setPercentHeight(50);
 		
-		pane.getRowConstraints().addAll(row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11);
+		pane.getRowConstraints().addAll(row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11,row12,row13);
 		
 		
 		
-		pane.setColumnSpan(drawingBoard, 1);
-		pane.setRowSpan(drawingBoard, 11);
+		pane.setColumnSpan(textArea, 1);
+		pane.setRowSpan(textArea, 13);
 		
 		pane.add(walls, 1, 0);
 		pane.add(cylinders, 1, 1);
 		pane.add(spheres, 1, 2);
 		pane.add(addMaterial, 1, 3);
+		pane.add(parrell, 2, 3);
 		pane.add(removeMaterial, 1, 4);
 		pane.add(CalculateHeatTransfer, 1, 5);
 		pane.add(heightLabel, 1, 6);
@@ -159,7 +245,11 @@ public class SteadyStateScrene implements Loader{
 		pane.add(depth, 2, 8);
 		pane.add(heatTransferCoefficientLabel, 1, 9);
 		pane.add(heatTransferCoefficient, 2, 9);
-		pane.add(drawingBoard, 0, 0);
+		pane.add(temp0Label, 1, 10);
+		pane.add(temp0, 2, 10);
+		pane.add(tempInfinityLabel, 1, 11);
+		pane.add(tempInfinity, 2, 11);
+		pane.add(textArea, 0, 0);
 		pane.setVisible(false);
 		
 	}
@@ -168,6 +258,8 @@ public class SteadyStateScrene implements Loader{
 		addMaterial = new Button("add Material");
 		removeMaterial = new Button("Remove Material");
 		CalculateHeatTransfer = new Button ("CalculateHeatTrasfer");
+		parrell = new Button ("add Parrell material");
+	
 		
 		
 		
@@ -208,8 +300,9 @@ public class SteadyStateScrene implements Loader{
 				heightLabel.setVisible(true);
 				height.setEditable(true);
 				lengthlabel.setVisible(true);
+				lengthlabel.setText("Length ft");
 				length.setEditable(true);
-				depthLabel.setText("depth");
+				depthLabel.setText("depth ft");
 				clearTextFields();
 				
 			}
@@ -220,9 +313,9 @@ public class SteadyStateScrene implements Loader{
 			public void handle(ActionEvent event) {
 				heightLabel.setVisible(false);
 				height.setEditable(false);
-				lengthlabel.setVisible(false);
-				length.setEditable(false);
-				depthLabel.setText("Diamater");
+				lengthlabel.setText("Thicknes ft");
+				
+				depthLabel.setText("Diamater ft");
 				clearTextFields();
 				
 			}
@@ -234,8 +327,8 @@ public class SteadyStateScrene implements Loader{
 				height.setEditable(false);
 				lengthlabel.setVisible(true);
 				length.setEditable(true);
-				
-				depthLabel.setText("Diamater");
+				lengthlabel.setText("Length ft");
+				depthLabel.setText("Diamater ft");
 				clearTextFields();
 				
 				
@@ -249,28 +342,91 @@ public class SteadyStateScrene implements Loader{
 				double lengthInt = Double.parseDouble(length.getText());
 				double heightNum = Double.parseDouble(height.getText());
 				double depthNum = Double.parseDouble(depth.getText());
+				
+				textArea.setText(textArea.getText() + String.format("Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() + 1,lengthInt, heightNum, depthNum, k));
 				materials.add(new Material("cartesian",k,lengthInt,heightNum,depthNum));
+				setPosition();
+				isAdding = true; 
+				
+				
 			}else if (spheres.isSelected()) {
 				//TODO:
+				double k = Double.parseDouble(heatTransferCoefficient.getText());
+				double diamater = Double.parseDouble(depth.getText());
+				double thickness = Double.parseDouble(length.getText());
+				materials.add(new Material("spherical",k,diamater,thickness));
 			}else {
-				//TODO creat new material for cylinder 
+				double k = Double.parseDouble(heatTransferCoefficient.getText());
+				double diamater = Double.parseDouble(depth.getText());
+				double lengthNum = Double.parseDouble(length.getText());
+				//TODO: get the innerDiameter and outterDiameter
 			}
 			}
 		});
 		removeMaterial.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
+				materials.remove(materials.size() - 1);
+				textArea.setText("Material "+ (materials.size() + 1) +" was removed\n");
 				
 			}
 		});
 		CalculateHeatTransfer.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
+				Material [] mat = new Material[materials.size()];
+				for (int i =0 ; i < materials.size(); i++) {
+					mat[i] = materials.get(i);
+				}
+				SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,Double.parseDouble(tempInfinity.getText()), Double.parseDouble(temp0.getText()));
+				//textArea.setText("the heat transfer is  "+Double.toString( Math.floor(st.calculateFlux() * 100 )/100) + " Btu/h");
+				textArea.setText(showWork(st));
 				
 			}
 		});
+		parrell.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				pane.setVisible(false);
+				popup = new Stage();
+				
+				popup.setScene(popupScene);
+				popup.show();
+				parallelMaterial.setVisible(true);
+				
+			}
+		});
+		popUpOk.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				
+				popup.close();
+				pane.setVisible(true);
+				
+			}
+		});
+//		drawingBoard.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
+//			@Override
+//			public void handle(MouseEvent mouseEvent) {
+//				if(isAdding) {
+//				initialMaterialx = mouseEvent.getScreenX();
+//				initialMaterialy = mouseEvent.getScreenY();
+//				
+//				
+//				int materalIndex = materials.size();
+//				Rectangle rect = new Rectangle(initialMaterialx,initialMaterialy,60*materalIndex,30* materalIndex);
+//				rect.setLayoutX(initialMaterialx);
+//				rect.setLayoutY(initialMaterialy);
+//				rect.setStroke(Color.BLACK);
+//				rect.setFill(null);
+//				rect.setStrokeWidth(3);
+//				drawingBoard.getChildren().add(rect);
+//				isAdding = false;
+//				}
+//			}
+//		});
 	}
 	private void clearTextFields(){
 		height.setText("0.0");
@@ -281,6 +437,24 @@ public class SteadyStateScrene implements Loader{
 	private void clearMaterial() {
 		materials = new ArrayList();
 			
+	}
+	private void setPosition() {
+		if (materials.size() != 1) {
+			double start = materials.get(materials.size()-2).getPosition().getEnd();
+			double end = start + materials.get(materials.size() - 1).getLength();
+			materials.get(materials.size() - 1).setPosition( new Position(start, end));
+			
+		}else {
+			materials.get(0).setPosition(new Position(0.0, materials.get(0).getLength()));
+		}
+	}
+	private String showWork(SteadyStateHeatTransfer st) {
+		String output = "";
+		if (walls.isSelected()) {
+			output = String.format("STEP 1 %n %n calculate the resistance of the material by the formula R = Length/(areal * k) %n if there is conduction you will use the Forumla R = 1 / (h * area) "
+					+ "%n %n The total resistance comes out to be: %.2f %n%n STEP 2	 %n To find the het transfer q  you use deltaT/R total = %.2f",st.calculateResistance(),st.calculateFlux());
+		}
+		return output;
 	}
 	
 }

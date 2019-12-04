@@ -11,10 +11,11 @@ public class SteadyStateHeatTransferTest {
 		Material [] mat = new Material [2];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
 		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);//last two nubers are not relevent to this test
+		mat[0].setPosition(new Position(0, 0));
 		
 		double transferCoeficientTwo = 12.1, lengthTwo = 4, widithTwo = 4, depthTwo = 3;
 		mat[1] = new Material("conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo);
-		
+		mat[1].setPosition(new Position(20, 20));
 		int tnot = 20;
 		int tinfinity = 100;
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,tinfinity,tnot);
@@ -24,7 +25,8 @@ public class SteadyStateHeatTransferTest {
 		totalResistance += lengthTwo/(transferCoeficientTwo*widithTwo*depthTwo);
 		double expected = (tinfinity - tnot)/totalResistance;
 		 
-		assertEquals(expected, actual,.000001);
+		System.out.println(actual);
+		assertEquals(expected, actual,.000001); 
 		//TODO: 
 	}
 	@Test 
@@ -32,13 +34,13 @@ public class SteadyStateHeatTransferTest {
 		Material [] mat = new Material[3];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
 		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
-		
+		mat[0].setPosition(new Position(0, 0));
 		double transferCoeficientTwo = 12.1, lengthTwo = 4, widithTwo = 4, depthTwo = 3;
 		mat[1] = new Material("conduction",transferCoeficientTwo,lengthTwo,widithTwo,depthTwo);
-		
+		mat[1].setPosition(new Position(20, 20));
 		double transferCoeficientThree = 22.4, lengthThree = 7, widiththree = 8, depthThree = 1;
 		mat[2] = new Material("conduction",transferCoeficientThree,lengthThree,widiththree,depthThree);
-		
+		mat[2].setPosition(new Position(100, 100));
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,100,20);
 		double expected = lenghtOne/(transferCoeficientOne*widithOne*depthOne);
 		expected += lengthTwo/(transferCoeficientTwo*widithTwo*depthTwo);
@@ -46,7 +48,7 @@ public class SteadyStateHeatTransferTest {
 		
 		double actual = st.calculateResistance();
 		assertEquals(expected, actual,.00001); 
-		
+		 
 	}
 	// even though we are calculating convencitve resistances we still need a solid material that for that convection to occur 
 	@Test 
@@ -54,11 +56,11 @@ public class SteadyStateHeatTransferTest {
 		Material [] mat = new Material[2];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
 		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
-		
+		mat[0].setPosition(new Position(0, 0));
 		// convection happens on a surface of another material so there is no materials just the conductive heat transfer coefficient.
 		double transferCoefficientTwo = 21.2, lengthTwo = 0, widithTwo = 0, depthTwo = 0;
 		mat[1] = new Material("convection",transferCoefficientTwo,lengthTwo,widithTwo,depthTwo);
-		
+		mat[1].setPosition(new Position(20, 20));
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,100,20);// last two numbers are not relevant to this test.
 		double expected = lenghtOne/(transferCoeficientOne*widithOne*depthOne);
 		expected +=  1 / (transferCoefficientTwo * widithOne * depthOne);
@@ -75,10 +77,10 @@ public class SteadyStateHeatTransferTest {
 		Material [] mat = new Material[2];
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
 		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
-		
+		mat[0].setPosition(new Position(0, 0));
 		double transferCoefficientTwo = 21.2, lengthTwo = 0, widithTwo = 0, depthTwo = 0;
 		mat[1] = new Material("convection",transferCoefficientTwo,lengthTwo,widithTwo,depthTwo);
-		
+		mat[1].setPosition(new Position(20, 20));
 		int tempInfinity =  40;
 		int temp0 = 400;
 		SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat, tempInfinity, temp0);
