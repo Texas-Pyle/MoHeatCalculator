@@ -22,7 +22,7 @@ public class Material {
 		this.typeOfHeatTransfer = typeOfHeatTransfer;
 		this.heatTransferCoefficient = heatTransferCoefficients; 
 		this.length = length;
-		this.innderDiameter = innerDiameter;
+		this.innderDiameter = innerDiameter; 
 		this.thickness = Thickness;
 		this.outterDiameter = outerDiamter;
 		this.typeOfGeometry = "cylindrical"; 

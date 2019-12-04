@@ -31,7 +31,7 @@ public class SteadyStateHeatTransferTest {
 	}
 	@Test 
 	public void calculateResistanceCartiesianTest() {
-		Material [] mat = new Material[3];
+		Material [] mat = new Material[3]; 
 		double transferCoeficientOne = 32.1,lenghtOne = 2, widithOne = 4,depthOne = 4;
 		mat[0] = new Material("conduction",transferCoeficientOne,lenghtOne,widithOne,depthOne);
 		mat[0].setPosition(new Position(0, 0));
@@ -87,6 +87,7 @@ public class SteadyStateHeatTransferTest {
 		double totalResistance = lenghtOne/(transferCoeficientOne*widithOne*depthOne);
 		totalResistance += 1 / (transferCoefficientTwo * widithOne * depthOne);
 		double expected = (temp0 - tempInfinity )/ totalResistance;
+		System.out.println(expected);
 		double actual = st.calculateFlux();
 		assertEquals(expected, actual,.00001);
 		

@@ -360,7 +360,10 @@ public class SteadyStateScrene implements Loader{
 				double depthNum = Double.parseDouble(depth.getText());
 				
 				textArea.setText(textArea.getText() + String.format("Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() + 1,lengthInt, heightNum, depthNum, k));
-				materials.add(new Material("cartesian",k,lengthInt,heightNum,depthNum));
+				if (!includeConvection.isSelected())
+				materials.add(new Material("conduction",k,lengthInt,heightNum,depthNum));
+				else 
+					materials.add(new Material("convection",Double.parseDouble(convectiveTransferCoeficient.getText()),lengthInt,heightNum,depthNum));
 				setPosition();
 				isAdding = true; 
 				
@@ -427,13 +430,13 @@ public class SteadyStateScrene implements Loader{
 				//depth is constant in this case 
 				double depth = materials.get(0).getDepth();
 				if (numberOfMaterials == 1) {
-					materials.add(new Material("cartesian", Double.parseDouble(heatTransferCoefficient.getText()), lengthNum, heightNum, depth));
+					materials.add(new Material("conduction", Double.parseDouble(heatTransferCoefficient.getText()), lengthNum, heightNum, depth));
 					materials.get(materials.size() - 1).setPosition(new Position(distanceFormOrigion, distanceFormOrigion + lengthNum));
 				}
 				
 				popup.close();
 				pane.setVisible(true);
-				textArea.setText(textArea.getText() + String.format("Parallel Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() + 1,lengthNum, heightNum, depth, Double.parseDouble(heatTransferCoefficient.getText())));
+				textArea.setText(textArea.getText() + String.format("Parallel Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() - 1,lengthNum, heightNum, depth, Double.parseDouble(heatTransferCoefficient.getText())));
 				
 			}
 		});
