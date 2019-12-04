@@ -20,7 +20,7 @@ public class Material {
 	// cylindrical constructor
 	public Material (String typeOfHeatTransfer, double heatTransferCoefficients, double length, double innerDiameter, double Thickness, double outerDiamter) {
 		this.typeOfHeatTransfer = typeOfHeatTransfer;
-		this.heatTransferCoefficient = heatTransferCoefficients;
+		this.heatTransferCoefficient = heatTransferCoefficients; 
 		this.length = length;
 		this.innderDiameter = innerDiameter;
 		this.thickness = Thickness;

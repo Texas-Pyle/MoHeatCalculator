@@ -41,6 +41,8 @@ public class SteadyStateScrene implements Loader{
 	RadioButton  walls;
 	RadioButton  cylinders;
 	RadioButton  spheres;
+	RadioButton includeConvection;
+	RadioButton showWork;
 	
 	ToggleGroup typeOfMaterial;
 	
@@ -60,6 +62,7 @@ public class SteadyStateScrene implements Loader{
 	TextField tempInfinity;
 	TextField temp0;
 	TextField popUpHeightText, popUpLengthText , popUpNumberOfMaterials, distanceInBetween , popUpXcordinate;
+	TextField convectiveTransferCoeficient;
 	
 	Label heightLabel;
 	Label lengthlabel; 
@@ -69,6 +72,7 @@ public class SteadyStateScrene implements Loader{
 	Label temp0Label;
 	Label popupLength;
 	Label popupHeight, popupNumberofMaterialsLabel, distanceInBetweenLabel, xCordinatelabel;
+	Label convenctionTrasferCoeficientLabel;
 	
 	TextArea textArea ;
 	
@@ -158,10 +162,13 @@ public class SteadyStateScrene implements Loader{
 		tempInfinity = new TextField();
 		temp0 = new TextField();
 		heatTransferCoefficient = new TextField();
+		convectiveTransferCoeficient = new TextField();
+		convectiveTransferCoeficient.setEditable(false);
 		heightLabel = new Label("height ft");
 		lengthlabel = new Label("Lenght ft");
 		depthLabel = new Label("Depth ft");
 		temp0Label = new Label("temp0 F");
+		convenctionTrasferCoeficientLabel = new Label("H");
 		tempInfinityLabel = new Label("Temp infinity F");
 		clearTextFields();
 		heatTransferCoefficientLabel = new Label("K (Btu/h ft F)");
@@ -207,7 +214,7 @@ public class SteadyStateScrene implements Loader{
 		row11 = new RowConstraints();
 		row12 = new RowConstraints();
 		row13 = new RowConstraints();
-		
+		row14 = new RowConstraints();
 		
 		row1.setPercentHeight(5);
 		row2.setPercentHeight(5);
@@ -221,18 +228,21 @@ public class SteadyStateScrene implements Loader{
 		row10.setPercentHeight(5);
 		row11.setPercentHeight(5);
 		row12.setPercentHeight(5);
-		row13.setPercentHeight(50);
+		row13.setPercentHeight(5);
+		row14.setPercentHeight(45);
 		
-		pane.getRowConstraints().addAll(row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11,row12,row13);
+		pane.getRowConstraints().addAll(row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11,row12,row13,row14);
 		
 		
 		
 		pane.setColumnSpan(textArea, 1);
-		pane.setRowSpan(textArea, 13);
+		pane.setRowSpan(textArea, 14);
 		
 		pane.add(walls, 1, 0);
 		pane.add(cylinders, 1, 1);
 		pane.add(spheres, 1, 2);
+		pane.add(includeConvection,2,0);
+		pane.add(showWork, 2, 1);
 		pane.add(addMaterial, 1, 3);
 		pane.add(parrell, 2, 3);
 		pane.add(removeMaterial, 1, 4);
@@ -249,6 +259,8 @@ public class SteadyStateScrene implements Loader{
 		pane.add(temp0, 2, 10);
 		pane.add(tempInfinityLabel, 1, 11);
 		pane.add(tempInfinity, 2, 11);
+		pane.add(convenctionTrasferCoeficientLabel, 1, 12);
+		pane.add(convectiveTransferCoeficient, 2, 12);
 		pane.add(textArea, 0, 0);
 		pane.setVisible(false);
 		
@@ -258,6 +270,7 @@ public class SteadyStateScrene implements Loader{
 		addMaterial = new Button("add Material");
 		removeMaterial = new Button("Remove Material");
 		CalculateHeatTransfer = new Button ("CalculateHeatTrasfer");
+		
 		parrell = new Button ("add Parrell material");
 	
 		
@@ -271,7 +284,10 @@ public class SteadyStateScrene implements Loader{
 		walls = new RadioButton("Walls");
 		cylinders = new RadioButton ("Cylinders and Pipes");
 		spheres = new RadioButton("spheres");
-		
+		includeConvection = new RadioButton("include Convection");
+		includeConvection.setSelected(false);
+		showWork = new RadioButton("Show Work");
+		showWork.setSelected(false);
 		walls.setToggleGroup(typeOfMaterial);
 		cylinders.setToggleGroup(typeOfMaterial);
 		spheres.setToggleGroup(typeOfMaterial);
@@ -379,7 +395,9 @@ public class SteadyStateScrene implements Loader{
 					mat[i] = materials.get(i);
 				}
 				SteadyStateHeatTransfer st = new SteadyStateHeatTransfer(mat,Double.parseDouble(tempInfinity.getText()), Double.parseDouble(temp0.getText()));
-				//textArea.setText("the heat transfer is  "+Double.toString( Math.floor(st.calculateFlux() * 100 )/100) + " Btu/h");
+				if (!showWork.isSelected()) {
+				textArea.setText("the heat transfer is  "+Double.toString( Math.floor(st.calculateFlux() * 100 )/100) + " Btu/h");
+				}else 
 				textArea.setText(showWork(st));
 				
 			}
@@ -401,9 +419,33 @@ public class SteadyStateScrene implements Loader{
 
 			@Override
 			public void handle(ActionEvent event) {
+				double heightNum = Double.parseDouble(popUpHeightText.getText());
+				double lengthNum = Double.parseDouble(popUpLengthText.getText());
+				double distanceBetween = Double.parseDouble(distanceInBetween.getText());
+				int numberOfMaterials = Integer.parseInt(popUpNumberOfMaterials.getText());
+				double distanceFormOrigion = Double.parseDouble(popUpXcordinate.getText());
+				//depth is constant in this case 
+				double depth = materials.get(0).getDepth();
+				if (numberOfMaterials == 1) {
+					materials.add(new Material("cartesian", Double.parseDouble(heatTransferCoefficient.getText()), lengthNum, heightNum, depth));
+					materials.get(materials.size() - 1).setPosition(new Position(distanceFormOrigion, distanceFormOrigion + lengthNum));
+				}
 				
 				popup.close();
 				pane.setVisible(true);
+				textArea.setText(textArea.getText() + String.format("Parallel Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() + 1,lengthNum, heightNum, depth, Double.parseDouble(heatTransferCoefficient.getText())));
+				
+			}
+		});
+		
+		includeConvection.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				if(includeConvection.isSelected())
+					convectiveTransferCoeficient.setEditable(true);
+				else 
+					convectiveTransferCoeficient.setEditable(false);
 				
 			}
 		});
@@ -451,7 +493,7 @@ public class SteadyStateScrene implements Loader{
 	private String showWork(SteadyStateHeatTransfer st) {
 		String output = "";
 		if (walls.isSelected()) {
-			output = String.format("STEP 1 %n %n calculate the resistance of the material by the formula R = Length/(areal * k) %n if there is conduction you will use the Forumla R = 1 / (h * area) "
+			output = String.format("STEP 1 %n %n calculate the resistance of the material by the formula R = Length/(areal * k) %n if there is convection you will use the Forumla R = 1 / (h * area) "
 					+ "%n %n The total resistance comes out to be: %.2f %n%n STEP 2	 %n To find the het transfer q  you use deltaT/R total = %.2f",st.calculateResistance(),st.calculateFlux());
 		}
 		return output;
