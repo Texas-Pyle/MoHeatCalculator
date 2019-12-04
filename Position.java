@@ -2,7 +2,7 @@
 public class Position {
 	double start;
 	double end;
-	
+	private double distanceBetween;
 	public Position(double start, double end) {
 		this.start = start;
 		this.end = end;
@@ -32,9 +32,11 @@ public class Position {
 
 	public double getDistanceBetween() {
 		// TODO Auto-generated method stub
-		return 0;
+		return distanceBetween;
 	}
-
+	public void setDistanceBetween(double distanceBetween) {
+		this.distanceBetween = distanceBetween;
+	}
 
 	
 	

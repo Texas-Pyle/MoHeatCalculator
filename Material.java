@@ -14,6 +14,7 @@ public class Material {
 	private double innderDiameter;
 	private double outterDiameter;
 	private Position position ; 
+	
 	public Material() {
 		
 	}
@@ -107,4 +108,5 @@ public class Material {
 		// TODO Auto-generated method stub
 		return widith;
 	}
+	
 }

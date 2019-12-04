@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
 
+import javax.swing.plaf.PopupMenuUI;
+
 import com.sun.javafx.scene.paint.GradientUtils.Point;
 import com.sun.xml.internal.ws.wsdl.writer.UsingAddressing;
 
@@ -50,7 +52,7 @@ public class SteadyStateScrene implements Loader{
 	Button addMaterial;
 	Button removeMaterial;
 	Button CalculateHeatTransfer;
-	Button popUpOk;
+	Button popUpOk,popUpBack;
 	Button parrell;
 	
 	
@@ -62,7 +64,7 @@ public class SteadyStateScrene implements Loader{
 	TextField heatTransferCoefficient;
 	TextField tempInfinity;
 	TextField temp0;
-	TextField popUpHeightText, popUpLengthText , popUpNumberOfMaterials, distanceInBetween , popUpXcordinate;
+	TextField popUpHeightText, popUpLengthText , popUpNumberOfMaterials, distanceInBetween , popUpXcordinate,popUpK;
 	TextField convectiveTransferCoeficient;
 	
 	Label heightLabel;
@@ -72,7 +74,7 @@ public class SteadyStateScrene implements Loader{
 	Label tempInfinityLabel;
 	Label temp0Label;
 	Label popupLength;
-	Label popupHeight, popupNumberofMaterialsLabel, distanceInBetweenLabel, xCordinatelabel;
+	Label popupHeight, popupNumberofMaterialsLabel, distanceInBetweenLabel, xCordinatelabel,popUpKLabel;
 	Label convenctionTrasferCoeficientLabel;
 	
 	TextArea textArea ;
@@ -118,7 +120,10 @@ public class SteadyStateScrene implements Loader{
 		popupNumberofMaterialsLabel = new Label ("number of materials");
 		distanceInBetweenLabel = new Label ( "distance inbetween materials");
 		xCordinatelabel = new Label("distance from origin ft");
+		popUpKLabel = new Label("K");
 		popUpOk = new Button("add");
+		popUpBack = new Button("Back");
+		popUpK = new TextField();
 		popUpLengthText = new TextField();
 		popUpHeightText = new TextField();
 		popUpNumberOfMaterials = new TextField();
@@ -131,12 +136,16 @@ public class SteadyStateScrene implements Loader{
 		parallelMaterial.add(popupLength, 1, 2);
 		parallelMaterial.add(popUpLengthText, 2, 2);
 		parallelMaterial.add(popUpOk, 1	, 6);
+		parallelMaterial.add(popUpBack, 2, 6);
 		parallelMaterial.add(popupNumberofMaterialsLabel, 1, 3);
 		parallelMaterial.add(popUpNumberOfMaterials, 2, 3);
 		parallelMaterial.add(distanceInBetweenLabel, 1, 4);
 		parallelMaterial.add(distanceInBetween, 2, 4);
 		parallelMaterial.add(xCordinatelabel, 1, 5);
 		parallelMaterial.add(popUpXcordinate, 2, 5);
+		parallelMaterial.add(popUpKLabel, 1, 0);
+		parallelMaterial.add(popUpK, 2, 0);
+		
 		
 		parallelMaterial.setVisible(false);
 		parallelMaterial.setVgap(10);
@@ -461,13 +470,23 @@ public class SteadyStateScrene implements Loader{
 				//depth is constant in this case 
 				double depth = materials.get(0).getDepth();
 				if (numberOfMaterials == 1) {
-					materials.add(new Material("conduction", Double.parseDouble(heatTransferCoefficient.getText()), lengthNum, heightNum, depth));
+					materials.add(new Material("conduction", Double.parseDouble(popUpK.getText()), lengthNum, heightNum, depth));
 					materials.get(materials.size() - 1).setPosition(new Position(distanceFormOrigion, distanceFormOrigion + lengthNum));
+					materials.get(materials.size() - 1).getPosition().setDistanceBetween(distanceBetween);
 				}
 				
 				popup.close();
 				pane.setVisible(true);
-				textArea.setText(textArea.getText() + String.format("Parallel Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() - 1,lengthNum, heightNum, depth, Double.parseDouble(heatTransferCoefficient.getText())));
+				textArea.setText(textArea.getText() + String.format("Parallel Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() ,lengthNum, heightNum, depth, Double.parseDouble(heatTransferCoefficient.getText())));
+				
+			}
+		});
+		popUpBack.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				popup.close();
+				pane.setVisible(true);
 				
 			}
 		});
