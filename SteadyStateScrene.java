@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 
 import com.sun.javafx.scene.paint.GradientUtils.Point;
+import com.sun.xml.internal.ws.wsdl.writer.UsingAddressing;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -82,6 +83,7 @@ public class SteadyStateScrene implements Loader{
 	double initialMaterialy;
 	
 	boolean isAdding = false;
+	boolean usedConvction = false;
 	
 	// for the popup 
 	Stage popup;
@@ -120,6 +122,8 @@ public class SteadyStateScrene implements Loader{
 		popUpLengthText = new TextField();
 		popUpHeightText = new TextField();
 		popUpNumberOfMaterials = new TextField();
+		popUpNumberOfMaterials.setText("2");
+		popUpNumberOfMaterials.setEditable(false);
 		distanceInBetween = new TextField();
 		popUpXcordinate = new TextField();
 		parallelMaterial.add(popupHeight, 1, 1);
@@ -313,13 +317,17 @@ public class SteadyStateScrene implements Loader{
 			
 			@Override
 			public void handle(ActionEvent event) {
+				textArea.clear();
 				heightLabel.setVisible(true);
+				heightLabel.setText("height ft");
 				height.setEditable(true);
 				lengthlabel.setVisible(true);
 				lengthlabel.setText("Length ft");
 				length.setEditable(true);
 				depthLabel.setText("depth ft");
+				parrell.setVisible(true);
 				clearTextFields();
+				clearMaterial();
 				
 			}
 		});
@@ -327,26 +335,28 @@ public class SteadyStateScrene implements Loader{
 			
 			@Override
 			public void handle(ActionEvent event) {
+				textArea.setText("WARNING THIS FEATURE IS NOT COMPLETE AND WILL YEILD A WRONG ANSWER!!!!!");
 				heightLabel.setVisible(false);
 				height.setEditable(false);
 				lengthlabel.setText("Thicknes ft");
-				
+				parrell.setVisible(false);
 				depthLabel.setText("Diamater ft");
 				clearTextFields();
-				
+				clearMaterial();
 			}
 		});
 		cylinders.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				heightLabel.setVisible(false);
-				height.setEditable(false);
+				textArea.clear();
+				heightLabel.setText("Inner Diamater");
 				lengthlabel.setVisible(true);
 				length.setEditable(true);
 				lengthlabel.setText("Length ft");
 				depthLabel.setText("Diamater ft");
+				parrell.setVisible(false);
 				clearTextFields();
-				
+				clearMaterial();
 				
 			}
 		});
@@ -358,12 +368,16 @@ public class SteadyStateScrene implements Loader{
 				double lengthInt = Double.parseDouble(length.getText());
 				double heightNum = Double.parseDouble(height.getText());
 				double depthNum = Double.parseDouble(depth.getText());
-				
-				textArea.setText(textArea.getText() + String.format("Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() + 1,lengthInt, heightNum, depthNum, k));
-				if (!includeConvection.isSelected())
+				 
+			
+				if (!includeConvection.isSelected()) {
 				materials.add(new Material("conduction",k,lengthInt,heightNum,depthNum));
-				else 
+					textArea.setText(textArea.getText() + String.format("Material %d added with length %.2f depth %.2f and height %.2f with a k of %.2f %n", materials.size() ,lengthInt, heightNum, depthNum, k));
+				}
+				else {
 					materials.add(new Material("convection",Double.parseDouble(convectiveTransferCoeficient.getText()),lengthInt,heightNum,depthNum));
+					textArea.setText(textArea.getText() + String.format("Convection was added to the pervious material with a heatTrasferCoeficient of  %.2f", Double.parseDouble(convectiveTransferCoeficient.getText()) ));
+				}
 				setPosition();
 				isAdding = true; 
 				
@@ -373,12 +387,29 @@ public class SteadyStateScrene implements Loader{
 				double k = Double.parseDouble(heatTransferCoefficient.getText());
 				double diamater = Double.parseDouble(depth.getText());
 				double thickness = Double.parseDouble(length.getText());
-				materials.add(new Material("spherical",k,diamater,thickness));
+				if (includeConvection.isSelected()) {
+					materials.add(new Material("convection",Double.parseDouble(convectiveTransferCoeficient.getText()),diamater,thickness));
+					textArea.setText(textArea.getText() + String.format("Convection was added to the pervious material with a heatTrasferCoeficient of  %.2f", Double.parseDouble(convectiveTransferCoeficient.getText()) ));
+				}else {
+					materials.add(new Material("conduction",k,diamater,thickness));
+					textArea.setText(textArea.getText() + String.format("Material %d added with Outer Diamater of  %.2f Thickness of %.2f with a k of %.2f %n", materials.size(),diamater,thickness	,  k));
+				}
+				
 			}else {
 				double k = Double.parseDouble(heatTransferCoefficient.getText());
-				double diamater = Double.parseDouble(depth.getText());
+				double outerDiamater = Double.parseDouble(depth.getText());
 				double lengthNum = Double.parseDouble(length.getText());
-				//TODO: get the innerDiameter and outterDiameter
+				double	innerDiamater = Double.parseDouble(height.getText());
+				double thickness = outerDiamater - innerDiamater;
+				if (includeConvection.isSelected()) {
+					materials.add(new Material("convection",Double.parseDouble(convectiveTransferCoeficient.getText()),innerDiamater,thickness,outerDiamater));
+					textArea.setText(textArea.getText() + String.format("Convection was added to the pervious material with a heatTrasferCoeficient of  %.2f", Double.parseDouble(convectiveTransferCoeficient.getText()) ));
+				}else {
+					materials.add(new Material("conduction",Double.parseDouble(heatTransferCoefficient.getText()),innerDiamater,thickness,outerDiamater));
+					textArea.setText(textArea.getText() + String.format("Material %d added with Outer Diamater of  %.2f length of %.2f and InnerDiamter of %.2f with a k of %.2f %n", materials.size(),outerDiamater, lengthNum	, innerDiamater, k));
+				}
+				setPosition();
+		
 			}
 			}
 		});
@@ -445,10 +476,21 @@ public class SteadyStateScrene implements Loader{
 
 			@Override
 			public void handle(ActionEvent event) {
-				if(includeConvection.isSelected())
+				if(includeConvection.isSelected()) {
 					convectiveTransferCoeficient.setEditable(true);
-				else 
+					height.setEditable(false);
+					length.setEditable(false);
+					depth.setEditable(false);
+					heatTransferCoefficient.setEditable(false);
+					clearTextFields();
+				}
+				else {
 					convectiveTransferCoeficient.setEditable(false);
+					height.setEditable(true);
+					length.setEditable(true);
+					depth.setEditable(true);
+					heatTransferCoefficient.setEditable(true);
+				}
 				
 			}
 		});
@@ -484,6 +526,7 @@ public class SteadyStateScrene implements Loader{
 			
 	}
 	private void setPosition() {
+		if (walls.isSelected()) {
 		if (materials.size() != 1) {
 			double start = materials.get(materials.size()-2).getPosition().getEnd();
 			double end = start + materials.get(materials.size() - 1).getLength();
@@ -492,12 +535,26 @@ public class SteadyStateScrene implements Loader{
 		}else {
 			materials.get(0).setPosition(new Position(0.0, materials.get(0).getLength()));
 		}
+		}else if (cylinders.isSelected()) {
+			if (materials.size() != 1) {
+				 double start = materials.get(materials.size()-2).getPosition().getEnd();
+				double end = start + (materials.get(materials.size()- 1).getDiameter()/2);
+				materials.get(materials.size() - 1).setPosition(new Position(start, end));
+			}else {
+				materials.get(0).setPosition(new Position(0.0, materials.get(0).getDiameter()/2));
+			}
+			
+		}
 	}
 	private String showWork(SteadyStateHeatTransfer st) {
 		String output = "";
-		if (walls.isSelected()) {
+		if (walls.isSelected()) {			
 			output = String.format("STEP 1 %n %n calculate the resistance of the material by the formula R = Length/(areal * k) %n if there is convection you will use the Forumla R = 1 / (h * area) "
-					+ "%n %n The total resistance comes out to be: %.2f %n%n STEP 2	 %n To find the het transfer q  you use deltaT/R total = %.2f",st.calculateResistance(),st.calculateFlux());
+					+ "%n %n The total resistance comes out to be: %.6f %n%n STEP 2	 %n To find the het transfer q  you use deltaT/R total = %.2f",st.calculateResistance(),st.calculateFlux());
+			
+		}else if (cylinders.isSelected()) {
+			output = String.format("STEP 1 %n %n calculate the resistance of the material by the formula R = ln(Od/Id)/(2 * pi * length* k) %n if there is convection you will use the Forumla R = 1 / (h * area) "
+					+ "%n %n The total resistance comes out to be: %.6f %n%n STEP 2	 %n To find the het transfer q  you use deltaT/R total = %.2f",st.calculateResistance(),st.calculateFlux());
 		}
 		return output;
 	}

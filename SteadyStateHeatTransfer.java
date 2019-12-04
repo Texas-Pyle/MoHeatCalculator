@@ -59,6 +59,8 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 							(2 * Math.PI * materials[i].getHeatTransferCoefficient() * materials[i].getLength());
 				}
 			}  
+		}else {
+			
 		}
 		
 		return totalResistance;

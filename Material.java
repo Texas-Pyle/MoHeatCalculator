@@ -47,7 +47,7 @@ public class Material {
 		this.depth = depth;
 		areaCartisian(depth, widith);
 		
-	}
+	} 
 	public double getArea() {
 		return area;
 	}
