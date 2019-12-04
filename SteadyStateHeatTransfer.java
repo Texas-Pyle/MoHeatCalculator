@@ -43,9 +43,18 @@ public class SteadyStateHeatTransfer extends HeatTransfer {
 			}
 			// calculations when materials are in series only in conduction 
 				else {
-					//TODO: this needs to be the posisiton of the parallel materail not just the length of the material 
-					totalResistance += materials[i].getLength() * (1/(materials[i].getHeatTransferCoefficient()*materials[i].getHeight() + materials[i + 1].getHeatTransferCoefficient()* 
-								materials[i+1].getHeight()));
+					//TODO: this needs to be the posisiton of the parallel materail not just the length of the material
+					double L1 = Math.abs(materials[i].getPosition().getStart() - materials[i + 1].getPosition().getStart());
+					double L2 = materials[i+ 1].getLength();
+					double L3 = Math.abs(materials[i+ 1].getPosition().getEnd() - materials[i].getPosition().getEnd());
+					double y1 = materials[i].getPosition().getDistanceBetween();
+					double y2 = materials[i].getHeight();
+					//calculate the resistance of the material to the parallel material
+					totalResistance += L1/(materials[i].getHeatTransferCoefficient() *(y1 + y2) );
+					//calculate the reisitance of the paralle materilas;
+					totalResistance += L2 * (1 / (materials[i].getHeatTransferCoefficient() * y1 + materials[i+ 1].getHeatTransferCoefficient() * y2));
+					// calculate the resistance after the parallel materias;
+					totalResistance += L3 / (materials[i].getHeatTransferCoefficient() *(y1 + y2) );
 					i++; //included two material in this calculation
 			}
 		}

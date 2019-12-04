@@ -30,6 +30,12 @@ public class Position {
 	}
 
 
+	public double getDistanceBetween() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 	
 	
 }
